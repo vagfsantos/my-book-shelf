@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const Menu = props => (
   <div className="navbar-menu">
     <div className="navbar-start">
       {props.menuItems.map(menuItem => (
-        <a key={menuItem.name} href={menuItem.link} className="navbar-item">
+        <Link to={menuItem.link} key={menuItem.name} className="navbar-item">
           {menuItem.name}
-        </a>
+        </Link>
       ))}
     </div>
   </div>

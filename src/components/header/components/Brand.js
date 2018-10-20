@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const Brand = props => (
   <div className="navbar-brand">
-    <a className="navbar-item" href="/">
+    <Link to="/" className="navbar-item">
       <img src={props.brandImagePath} width="200px" alt={props.brandName} />
-    </a>
+    </Link>
 
     <a
       href="#a"
