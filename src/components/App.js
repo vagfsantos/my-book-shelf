@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from "react-router-dom";
 
 import * as booksAPIService from "../services/api/books-api";
 
@@ -9,12 +14,15 @@ import HomePage from "./pages/HomePage";
 import ReadingPage from "./pages/ReadingPage";
 import ReadPage from "./pages/ReadPage";
 import WantToReadPage from "./pages/WantToReadPage";
+import OfflinePage from "./pages/OfflinePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 import "../styles/main.scss";
 
 class App extends Component {
   state = {
-    books: []
+    books: [],
+    networkError: false
   };
 
   componentDidMount() {
@@ -26,28 +34,42 @@ class App extends Component {
         });
         return books;
       })
-      .then(console.log);
+      .then(console.log)
+      .catch(e => {
+        this.setState({
+          networkError: true
+        });
+      });
   }
 
   render() {
-    const { books } = this.state.books;
+    const { books, networkError } = this.state;
 
     return (
       <Router>
         <div className="app">
+          {networkError && <Redirect to="/offline" />}
           <Header />
-          <Route path="/" exact render={() => <HomePage books={books} />} />
-          <Route
-            path="/reading"
-            exact
-            render={() => <ReadingPage books={books} />}
-          />
-          <Route path="/read" exact render={() => <ReadPage books={books} />} />
-          <Route
-            path="/want-to-read"
-            exact
-            render={() => <WantToReadPage books={books} />}
-          />
+          <Switch>
+            <Route path="/" exact render={() => <HomePage books={books} />} />
+            <Route
+              path="/reading"
+              exact
+              render={() => <ReadingPage books={books} />}
+            />
+            <Route
+              path="/read"
+              exact
+              render={() => <ReadPage books={books} />}
+            />
+            <Route
+              path="/want-to-read"
+              exact
+              render={() => <WantToReadPage books={books} />}
+            />
+            <Route path="/offline" exact component={OfflinePage} />
+            <Route component={NotFoundPage} />
+          </Switch>
         </div>
       </Router>
     );
