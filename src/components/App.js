@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import * as booksAPIService from "../services/api/books-api";
-import { shelfFilter } from "../services/shelf/shelf-filter";
+import { shelfFilter } from "../utils/shelf/shelf-filter";
 
 import Header from "./header/Header";
 import Shelf from "./shelf/Shelf";

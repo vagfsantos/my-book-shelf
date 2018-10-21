@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import textUtil from "../../../utils/textUtil";
+import { textUtil } from "../../../utils/textUtil";
 
 const BookInfo = props => (
   <div>
