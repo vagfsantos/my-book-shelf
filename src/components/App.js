@@ -42,7 +42,11 @@ class App extends Component {
             <section className="section">
               <div className="columns">
                 <div className="column">
-                  <Shelf title="Currently Reading" books={this.state.books} />
+                  <Shelf
+                    title="Currently Reading"
+                    books={this.state.books}
+                    slotsByRow={1}
+                  />
                 </div>
               </div>
             </section>
@@ -50,10 +54,18 @@ class App extends Component {
             <section className="section">
               <div className="columns">
                 <div className="column">
-                  <Shelf title="Want to Read" books={this.state.books} />
+                  <Shelf
+                    title="Want to Read"
+                    books={this.state.books}
+                    slotsByRow={3}
+                  />
                 </div>
                 <div className="column is-one-quarter">
-                  <Shelf title="Already Read" books={this.state.books} />
+                  <Shelf
+                    title="Already Read"
+                    books={this.state.books}
+                    slotsByRow={1}
+                  />
                 </div>
               </div>
             </section>
