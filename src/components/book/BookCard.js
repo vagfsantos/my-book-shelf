@@ -1,20 +1,22 @@
 import React from "react";
 
-const Book = props => (
+import BookEntity from "./entity/BookEntity";
+
+const BookCard = props => (
   <div className="box">
     <div className="media">
       <div className="media-left">
         <figure className="image">
-          <img src={props.cardContent.imageLinks.thumbnail} alt="Placeholder" />
+          <img src={props.bookInfo.imageLinks.thumbnail} alt="Placeholder" />
         </figure>
       </div>
       <div className="media-content">
         <div className="media-content">
-          <p className="title is-4">{props.cardContent.title}</p>
-          <p className="subtitle is-6">{props.cardContent.subtitle}</p>
+          <p className="title is-4">{props.bookInfo.title}</p>
+          <p className="subtitle is-6">{props.bookInfo.subtitle}</p>
           <div className="content">'aa'</div>
-          {props.cardContent.categories &&
-            props.cardContent.categories.map((category, index) => (
+          {props.bookInfo.categories &&
+            props.bookInfo.categories.map((category, index) => (
               <span key={index} className="tag is-link">
                 {category.toLowerCase()}
               </span>
@@ -25,4 +27,8 @@ const Book = props => (
   </div>
 );
 
-export default Book;
+BookCard.propTypes = {
+  bookInfo: BookEntity.isRequired
+};
+
+export default BookCard;
