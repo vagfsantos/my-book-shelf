@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+
 import * as booksAPIService from "../services/api/books-api";
+import { shelfFilter } from "../services/shelf/shelf-filter";
 
 import Header from "./header/Header";
 import Shelf from "./shelf/Shelf";
@@ -44,7 +46,7 @@ class App extends Component {
                 <div className="column">
                   <Shelf
                     title="Currently Reading"
-                    books={this.state.books}
+                    books={shelfFilter.getCurrentlyReading(this.state.books)}
                     slotsByRow={1}
                   />
                 </div>
@@ -56,14 +58,14 @@ class App extends Component {
                 <div className="column">
                   <Shelf
                     title="Want to Read"
-                    books={this.state.books}
+                    books={shelfFilter.getWantToRead(this.state.books)}
                     slotsByRow={3}
                   />
                 </div>
                 <div className="column is-one-quarter">
                   <Shelf
                     title="Already Read"
-                    books={this.state.books}
+                    books={shelfFilter.getAlreadyRead(this.state.books)}
                     slotsByRow={1}
                   />
                 </div>
