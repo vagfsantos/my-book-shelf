@@ -1,31 +1,38 @@
-import React from "react";
+import React, { Component } from "react";
 
 import BookEntity from "./entity/BookEntity";
 
-const BookCard = props => (
-  <div className="box">
-    <div className="media">
-      <div className="media-left">
-        <figure className="image">
-          <img src={props.bookInfo.imageLinks.thumbnail} alt="Placeholder" />
-        </figure>
-      </div>
-      <div className="media-content">
-        <div className="media-content">
-          <p className="title is-4">{props.bookInfo.title}</p>
-          <p className="subtitle is-6">{props.bookInfo.subtitle}</p>
-          <div className="content">'aa'</div>
-          {props.bookInfo.categories &&
-            props.bookInfo.categories.map((category, index) => (
-              <span key={index} className="tag is-link">
-                {category.toLowerCase()}
-              </span>
-            ))}
+import BookImage from "./components/BookImage";
+import BookInfo from "./components/BookInfo";
+import BookTags from "./components/BookTags";
+
+class BookCard extends Component {
+  render() {
+    const {
+      title = "",
+      subtitle = "",
+      description = "",
+      categories = [],
+      thumbnail = ""
+    } = this.props;
+
+    return (
+      <div className="box">
+        <div className="media">
+          <BookImage imageURL={thumbnail} imageDescription={title} />
+          <div className="media-content">
+            <BookInfo
+              title={title}
+              subtitle={subtitle}
+              description={description}
+            />
+            <BookTags categories={categories} />
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 BookCard.propTypes = {
   bookInfo: BookEntity.isRequired
