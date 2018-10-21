@@ -13,11 +13,11 @@ class BookCard extends Component {
       subtitle = "",
       description = "",
       categories = [],
-      thumbnail = ""
-    } = this.props;
+      imageLinks: { thumbnail = "" }
+    } = this.props.bookInfo;
 
     return (
-      <div className="box">
+      <div className="box has-background-light">
         <div className="media">
           <BookImage imageURL={thumbnail} imageDescription={title} />
           <div className="media-content">
@@ -27,6 +27,26 @@ class BookCard extends Component {
               description={description}
             />
             <BookTags categories={categories} />
+            <div>
+              <a class="button is-info is-outlined">
+                <span class="icon is-small">
+                  <i class="fas fa-book-reader" />
+                </span>
+                <span>Reading</span>
+              </a>
+              <a class="button is-danger is-outlined">
+                <span class="icon is-small">
+                  <i class="fas fa-grin-hearts" />
+                </span>
+                <span>Want to read</span>
+              </a>
+              <a class="button is-primary is-outlined">
+                <span class="icon is-small">
+                  <i class="fas fa-book" />
+                </span>
+                <span>Read</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
