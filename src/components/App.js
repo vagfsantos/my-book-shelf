@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import * as booksAPIService from "../services/api/books-api";
 
 import Header from "./header/Header";
 import Shelf from "./shelf/Shelf";
@@ -7,6 +8,22 @@ import Shelf from "./shelf/Shelf";
 import "../styles/main.scss";
 
 class App extends Component {
+  state = {
+    books: []
+  };
+
+  componentDidMount() {
+    booksAPIService
+      .getAll()
+      .then(books => {
+        this.setState({
+          books
+        });
+        return books;
+      })
+      .then(console.log);
+  }
+
   render() {
     return (
       <Router>
@@ -25,7 +42,7 @@ class App extends Component {
             <section className="section">
               <div className="columns">
                 <div className="column">
-                  <Shelf title="Currently Reading" books={[]} />
+                  <Shelf title="Currently Reading" books={this.state.books} />
                 </div>
               </div>
             </section>
@@ -33,10 +50,10 @@ class App extends Component {
             <section className="section">
               <div className="columns">
                 <div className="column">
-                  <Shelf title="Want to Read" books={[]} />
+                  <Shelf title="Want to Read" books={this.state.books} />
                 </div>
                 <div className="column is-one-quarter">
-                  <Shelf title="Already Read" books={[]} />
+                  <Shelf title="Already Read" books={this.state.books} />
                 </div>
               </div>
             </section>
