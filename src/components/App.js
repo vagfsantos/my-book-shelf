@@ -5,6 +5,7 @@ import {
   Redirect,
   Switch
 } from "react-router-dom";
+import PubSub from "pubsub-js";
 
 import * as booksAPIService from "../services/api/books-api";
 
@@ -40,6 +41,30 @@ class App extends Component {
           networkError: true
         });
       });
+
+    PubSub.subscribe("shelf.statuses.has.changed", (message, shelfStatuses) => {
+      const currentlyReading = shelfStatuses["currentlyReading"];
+      const wantToRead = shelfStatuses["wantToRead"];
+      const read = shelfStatuses["read"];
+
+      this.setState(currentState => {
+        const books = currentState.books;
+
+        currentlyReading.forEach(bookID => {
+          books.find(book => book.id === bookID).shelf = "currentlyReading";
+        });
+
+        wantToRead.forEach(bookID => {
+          books.find(book => book.id === bookID).shelf = "wantToRead";
+        });
+
+        read.forEach(bookID => {
+          books.find(book => book.id === bookID).shelf = "read";
+        });
+
+        return books;
+      });
+    });
   }
 
   render() {
