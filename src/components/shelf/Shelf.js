@@ -6,7 +6,7 @@ import BookEntity from "../book/entity/BookEntity";
 
 const Shelf = props => (
   <div>
-    <h2 className="title is-5">{props.title}</h2>
+    <h2 className="title is-2 has-text-link">{props.title}</h2>
     <div className="columns is-multiline is-mobile">
       {props.books.map(bookInfo => (
         <div className={`column is-${12 / props.slotsByRow}`} key={bookInfo.id}>

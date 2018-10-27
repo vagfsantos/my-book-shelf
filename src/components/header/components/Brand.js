@@ -9,7 +9,7 @@ const Brand = props => (
     </Link>
 
     <a
-      href="#a"
+      onClick={props.toggleMobileMenu}
       role="button"
       className="navbar-burger"
       aria-label="menu"
@@ -24,7 +24,8 @@ const Brand = props => (
 
 Brand.propTypes = {
   brandImagePath: PropTypes.string.isRequired,
-  brandName: PropTypes.string.isRequired
+  brandName: PropTypes.string.isRequired,
+  toggleMobileMenu: PropTypes.func.isRequired
 };
 
 export default Brand;

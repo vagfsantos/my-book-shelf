@@ -20,7 +20,7 @@ class BookCard extends Component {
     } = this.props.bookInfo;
 
     return (
-      <div className="box has-background-light">
+      <div className="book-card box has-background-light">
         <div className="media">
           <BookImage imageURL={thumbnail} imageDescription={title} />
           <div className="media-content">

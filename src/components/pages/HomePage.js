@@ -35,10 +35,10 @@ const HomePage = props => (
             <Shelf
               title="Want to Read"
               books={shelfFilter.getWantToRead(props.books)}
-              slotsByRow={3}
+              slotsByRow={1}
             />
           </div>
-          <div className="column is-one-quarter">
+          <div className="column">
             <Shelf
               title="Already Read"
               books={shelfFilter.getAlreadyRead(props.books)}

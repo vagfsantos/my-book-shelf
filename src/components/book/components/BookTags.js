@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const BookTags = props => (
-  <div>
+  <div className="shelf-tag-box">
     {props.categories &&
       props.categories.map((category, index) => (
         <span key={index} className="tag is-link">

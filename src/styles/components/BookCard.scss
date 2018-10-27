@@ -1,0 +1,11 @@
+.book-card {
+  @media (max-width: $tablet) {
+    .media {
+      display: block;
+    }
+
+    .media-content {
+      margin-top: 1rem;
+    }
+  }
+}
