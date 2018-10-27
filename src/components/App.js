@@ -5,9 +5,10 @@ import {
   Redirect,
   Switch
 } from "react-router-dom";
-import PubSub from "pubsub-js";
 
 import * as booksAPIService from "../services/api/books-api";
+import { appEvent } from "../services/events/app-event-handler";
+import { shelfFilter } from "./../utils/shelf/shelf-filter";
 
 import Header from "./header/Header";
 
@@ -27,43 +28,28 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this.listenToBookShelfStatus();
+
     booksAPIService
       .getAll()
-      .then(books => {
-        this.setState({
-          books
-        });
-        return books;
-      })
-      .then(console.log)
+      .then(books => this.setState({ books }))
       .catch(e => {
+        console.log(e);
         this.setState({
           networkError: true
         });
       });
+  }
 
-    PubSub.subscribe("shelf.statuses.has.changed", (message, shelfStatuses) => {
-      const currentlyReading = shelfStatuses["currentlyReading"];
-      const wantToRead = shelfStatuses["wantToRead"];
-      const read = shelfStatuses["read"];
+  listenToBookShelfStatus() {
+    appEvent.whenBookStatusChange(shelfStatus => {
+      const currentBooks = this.state.books;
+      const rearregedBooks = shelfFilter.rearrangeBooksByShelf(
+        shelfStatus,
+        currentBooks
+      );
 
-      this.setState(currentState => {
-        const books = currentState.books;
-
-        currentlyReading.forEach(bookID => {
-          books.find(book => book.id === bookID).shelf = "currentlyReading";
-        });
-
-        wantToRead.forEach(bookID => {
-          books.find(book => book.id === bookID).shelf = "wantToRead";
-        });
-
-        read.forEach(bookID => {
-          books.find(book => book.id === bookID).shelf = "read";
-        });
-
-        return books;
-      });
+      this.setState(() => ({ books: rearregedBooks }));
     });
   }
 

@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import PubSub from "pubsub-js";
 
+import ButtonStatusButton from "./BookStatusButton";
+
+import { BOOK_SHELF_STATUS } from "../../../enums/books-status";
 import * as booksAPIService from "../../../services/api/books-api";
+import { appEvent } from "../../../services/events/app-event-handler";
+
+const { READING, WANT_TO_READ, READ } = BOOK_SHELF_STATUS;
 
 class BookStatus extends Component {
   static propTypes = {
@@ -10,64 +15,51 @@ class BookStatus extends Component {
     activeShelf: PropTypes.string.isRequired
   };
 
-  onChangeShelf = shelf => {
+  onChangeShelf(shelf) {
     booksAPIService
       .update({ id: this.props.bookID }, shelf)
-      .then(shelfStatuses => {
-        PubSub.publish("shelf.statuses.has.changed", shelfStatuses);
-      });
-  };
+      .then(appEvent.bookStatusHasChanged);
+  }
+
+  isButtonActivated(shelf) {
+    return shelf === this.props.activeShelf ? true : false;
+  }
 
   render() {
     return (
-      <div>
-        <button
-          onClick={() => {
-            this.onChangeShelf("currentlyReading");
+      <div className="shelf-status-box">
+        <ButtonStatusButton
+          onClickHandler={() => {
+            this.onChangeShelf(READING);
           }}
-          className={
-            (this.props.activeShelf === "currentlyReading"
-              ? ""
-              : "is-outlined") + " button is-info"
-          }
+          theme="is-info"
+          icon="fa-book-reader"
+          isActive={this.isButtonActivated(READING)}
         >
-          <span className="icon is-small">
-            <i className="fas fa-book-reader" />
-          </span>
-          <span>Reading</span>
-        </button>
+          Reading
+        </ButtonStatusButton>
 
-        <button
-          onClick={() => {
-            this.onChangeShelf("wantToRead");
+        <ButtonStatusButton
+          onClickHandler={() => {
+            this.onChangeShelf(WANT_TO_READ);
           }}
-          href="#"
-          className={
-            (this.props.activeShelf === "wantToRead" ? "" : "is-outlined") +
-            " button is-danger"
-          }
+          theme="is-danger"
+          icon="fa-grin-hearts"
+          isActive={this.isButtonActivated(WANT_TO_READ)}
         >
-          <span className="icon is-small">
-            <i className="fas fa-grin-hearts" />
-          </span>
-          <span>Want to read</span>
-        </button>
+          Want to read
+        </ButtonStatusButton>
 
-        <button
-          onClick={() => {
-            this.onChangeShelf("read");
+        <ButtonStatusButton
+          onClickHandler={() => {
+            this.onChangeShelf(READ);
           }}
-          href="#"
-          className={
-            (this.props.activeShelf === "read" ? "" : "is-outlined") +
-            " button is-primary"
-          }
+          theme="is-primary"
+          icon="fa-book"
+          isActive={this.isButtonActivated(READ)}
         >
-          <span className="icon is-small">
-            <i className="fas fa-book" />
-          </span>
-          <span>Read</span>
-        </button>
+          Read
+        </ButtonStatusButton>
       </div>
     );
   }
