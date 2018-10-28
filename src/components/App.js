@@ -18,6 +18,7 @@ import ReadPage from "./pages/ReadPage";
 import WantToReadPage from "./pages/WantToReadPage";
 import OfflinePage from "./pages/OfflinePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SearchPage from "./pages/SearchPage";
 
 import "../styles/main.scss";
 
@@ -78,8 +79,10 @@ class App extends Component {
               exact
               render={() => <WantToReadPage books={books} />}
             />
+            <Route path="/search" exact render={() => <SearchPage />} />
             <Route path="/offline" exact component={OfflinePage} />
-            <Route component={NotFoundPage} />
+            <Route path="/404" exact component={NotFoundPage} />
+            <Route render={() => <Redirect to="/404" />} />
           </Switch>
         </div>
       </Router>
