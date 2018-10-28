@@ -7,25 +7,14 @@ const Brand = props => (
     <Link to="/" className="navbar-item">
       <img src={props.brandImagePath} width="200px" alt={props.brandName} />
     </Link>
-
-    <a
-      onClick={props.toggleMobileMenu}
-      role="button"
-      className="navbar-burger"
-      aria-label="menu"
-      aria-expanded="false"
-    >
-      <span aria-hidden="true" />
-      <span aria-hidden="true" />
-      <span aria-hidden="true" />
-    </a>
+    {props.children}
   </div>
 );
 
 Brand.propTypes = {
   brandImagePath: PropTypes.string.isRequired,
   brandName: PropTypes.string.isRequired,
-  toggleMobileMenu: PropTypes.func.isRequired
+  children: PropTypes.element
 };
 
 export default Brand;

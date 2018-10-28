@@ -1,14 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Menu = props => (
   <div className={`navbar-menu ${props.isActive ? "is-active" : null}`}>
     <div className="navbar-start">
       {props.menuItems.map(menuItem => (
-        <Link to={menuItem.link} key={menuItem.name} className="navbar-item">
+        <NavLink
+          to={menuItem.link}
+          key={menuItem.name}
+          onClick={props.clickHandler}
+          className="navbar-item"
+          activeClassName="is-active"
+        >
           {menuItem.name}
-        </Link>
+        </NavLink>
       ))}
     </div>
   </div>
@@ -21,7 +27,8 @@ Menu.propTypes = {
       name: PropTypes.string.isRequired
     })
   ).isRequired,
-  isActive: PropTypes.bool.isRequired
+  isActive: PropTypes.bool.isRequired,
+  clickHandler: PropTypes.func.isRequired
 };
 
 export default Menu;

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import Menu from "./components/Menu";
 import Brand from "./components/Brand";
+import BurgerMenu from "./components/BurgerMenu";
+
 import menuItems from "./data/menuItems";
 
 class Header extends Component {
@@ -9,11 +11,15 @@ class Header extends Component {
     isMenuOpened: false
   };
 
-  toggleMobileMenu = e => {
-    e.preventDefault();
+  toggleMobileMenu = event => {
+    event.preventDefault();
     this.setState(currentState => ({
       isMenuOpened: !currentState.isMenuOpened
     }));
+  };
+
+  closeMobileMenu = () => {
+    this.setState({ isMenuOpened: false });
   };
 
   render() {
@@ -24,12 +30,14 @@ class Header extends Component {
           role="navigation"
           aria-label="main navigation"
         >
-          <Brand
-            brandName="My Book Shelf"
-            brandImagePath="/images/logo.svg"
-            toggleMobileMenu={this.toggleMobileMenu}
+          <Brand brandName="My Book Shelf" brandImagePath="/images/logo.svg">
+            <BurgerMenu clickHandler={this.toggleMobileMenu} />
+          </Brand>
+          <Menu
+            clickHandler={this.closeMobileMenu}
+            menuItems={menuItems}
+            isActive={this.state.isMenuOpened}
           />
-          <Menu menuItems={menuItems} isActive={this.state.isMenuOpened} />
         </nav>
       </header>
     );
