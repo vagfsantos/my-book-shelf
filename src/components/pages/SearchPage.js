@@ -30,14 +30,14 @@ class SearchPage extends Component {
           return this.setState({ searchedBooks: [] });
         }
 
-        this.setState({ searchedBooks: books });
+        this.setState({ searchedBooks: books }, this.searchDidHappened);
       })
       .catch(error => {
         this.setState({ searchedBooks: [] });
       });
   };
 
-  componentWillReceiveProps() {
+  searchDidHappened() {
     this.props.books.forEach(storedBooks => {
       this.setState(({ searchedBooks }) => {
         return {
@@ -50,6 +50,10 @@ class SearchPage extends Component {
         };
       });
     });
+  }
+
+  componentWillReceiveProps() {
+    this.searchDidHappened();
   }
 
   render() {
@@ -67,7 +71,7 @@ class SearchPage extends Component {
           <section className="section">
             <div className="columns">
               <div className="column">
-                <Shelf books={this.state.searchedBooks} slotsByRow={3} />
+                <Shelf books={this.state.searchedBooks} slotsByRow={2} />
               </div>
             </div>
           </section>
