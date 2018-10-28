@@ -1,48 +1,80 @@
-import React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import Shelf from "./../shelf/Shelf";
+import HeroSection from "./../HeroSection/HeroSection";
+import SearchBookForm from "./../SearchBookForm/SearchBookForm";
 
-const SearchPage = () => (
-  <div>
-    <section className="hero is-link is-small">
-      <div className="hero-body">
-        <div className="container has-text-centered">
-          <h1 className="title is-1">Search</h1>
-          <h2 className="subtitle">Type your book</h2>
+import BookEntity from "../book/entity/BookEntity";
+import * as booksAPIService from "../../services/api/books-api";
 
-          <div className="columns">
-            <div className="column is-half is-offset-one-quarter">
-              <form>
-                <div class="field">
-                  <div class="control has-icons-left has-icons-right">
-                    <input
-                      class="input is-success"
-                      type="text"
-                      placeholder="Text input"
-                      value="bulma"
-                    />
-                    <span class="icon is-small is-left">
-                      <i class="fas fa-search" />
-                    </span>
-                  </div>
-                </div>
-              </form>
+class SearchPage extends Component {
+  static propsTypes = {
+    books: PropTypes.arrayOf(BookEntity).isRequired
+  };
+
+  state = {
+    searchedBooks: []
+  };
+
+  searchBook = bookQuery => {
+    if (!bookQuery.trim()) {
+      this.setState({ searchedBooks: [] });
+      return;
+    }
+
+    booksAPIService
+      .search(bookQuery)
+      .then(books => {
+        if (books.error) {
+          return this.setState({ searchedBooks: [] });
+        }
+
+        this.setState({ searchedBooks: books });
+      })
+      .catch(error => {
+        this.setState({ searchedBooks: [] });
+      });
+  };
+
+  componentWillReceiveProps() {
+    this.props.books.forEach(storedBooks => {
+      this.setState(({ searchedBooks }) => {
+        return {
+          searchedBooks: searchedBooks.map(book => {
+            if (book.id === storedBooks.id) {
+              return storedBooks;
+            }
+            return book;
+          })
+        };
+      });
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <HeroSection
+          title="Search"
+          subtitle="Find all books you like the most"
+          sizeClass="is-small"
+        >
+          <SearchBookForm onChangeHandler={this.searchBook} />
+        </HeroSection>
+
+        <div className="container">
+          <section className="section">
+            <div className="columns">
+              <div className="column">
+                <Shelf books={this.state.searchedBooks} slotsByRow={3} />
+              </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
-    </section>
-
-    <div className="container">
-      <section className="section">
-        <div className="columns">
-          <div className="column">
-            <Shelf books={[]} slotsByRow={1} />
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 export default SearchPage;

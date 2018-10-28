@@ -3,18 +3,16 @@ import PropTypes from "prop-types";
 
 import BookEntity from "../book/entity/BookEntity";
 import Shelf from "../shelf/Shelf";
+import HeroSection from "../HeroSection/HeroSection";
 import { shelfFilter } from "../../utils/shelf/shelf-filter";
 
 const ReadingPage = props => (
   <div>
-    <section className="hero is-link is-medium">
-      <div className="hero-body">
-        <div className="container has-text-centered">
-          <h1 className="title is-1">Reading</h1>
-          <h2 className="subtitle">This is your shelf</h2>
-        </div>
-      </div>
-    </section>
+    <HeroSection
+      title="Reading"
+      subtitle="Stick to your reading and grow even more"
+      sizeClass="is-medium"
+    />
 
     <div className="container">
       <section className="section">

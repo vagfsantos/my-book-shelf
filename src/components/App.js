@@ -79,7 +79,11 @@ class App extends Component {
               exact
               render={() => <WantToReadPage books={books} />}
             />
-            <Route path="/search" exact render={() => <SearchPage />} />
+            <Route
+              path="/search"
+              exact
+              render={() => <SearchPage books={books} />}
+            />
             <Route path="/offline" exact component={OfflinePage} />
             <Route path="/404" exact component={NotFoundPage} />
             <Route render={() => <Redirect to="/404" />} />
