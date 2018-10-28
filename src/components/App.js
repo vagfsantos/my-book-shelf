@@ -43,14 +43,27 @@ class App extends Component {
   }
 
   listenToBookShelfStatus() {
-    appEvent.whenBookStatusChange(shelfStatus => {
+    appEvent.whenBookStatusChange(shelfStatuses => {
       const currentBooks = this.state.books;
       const rearregedBooks = shelfFilter.rearrangeBooksByShelf(
-        shelfStatus,
+        shelfStatuses,
         currentBooks
       );
 
-      this.setState(() => ({ books: rearregedBooks }));
+      const newBookId = shelfFilter.getNewBooks(shelfStatuses, currentBooks);
+
+      if (newBookId) {
+        const fetchBooks = booksAPIService.get(newBookId);
+        fetchBooks.then(newFetchedBook => {
+          this.setState(() => ({
+            books: [...rearregedBooks, newFetchedBook]
+          }));
+        });
+      } else {
+        this.setState(() => ({
+          books: rearregedBooks
+        }));
+      }
     });
   }
 

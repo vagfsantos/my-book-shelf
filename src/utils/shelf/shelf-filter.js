@@ -22,8 +22,10 @@ export const shelfFilter = {
     const read = shelfStatuses[READ];
 
     const findBook = (bookID, shelfName) => {
-      const book = books.find(book => book.id === bookID);
-      if (book) book.shelf = shelfName;
+      const foundBook = books.find(book => book.id === bookID);
+      if (foundBook) {
+        foundBook.shelf = shelfName;
+      }
     };
 
     currentlyReading.forEach(bookID => findBook(bookID, READING));
@@ -33,5 +35,19 @@ export const shelfFilter = {
     read.forEach(bookID => findBook(bookID, READ));
 
     return books;
+  },
+
+  getNewBooks(shelfStatuses, currentBooks) {
+    const books = [...currentBooks];
+    const allBookIds = [
+      ...shelfStatuses[READING],
+      ...shelfStatuses[WANT_TO_READ],
+      ...shelfStatuses[READ]
+    ];
+
+    const foundBooknNewBook = allBookIds.find(
+      id => !books.find(book => book.id === id)
+    );
+    return foundBooknNewBook;
   }
 };
