@@ -16,7 +16,6 @@ class BookStatus extends Component {
   };
 
   onChangeShelf(shelf) {
-    console.log(shelf);
     booksAPIService
       .update({ id: this.props.bookID }, shelf)
       .then(appEvent.bookStatusHasChanged)

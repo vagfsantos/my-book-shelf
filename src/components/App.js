@@ -8,7 +8,7 @@ import {
 
 import * as booksAPIService from "../services/api/books-api";
 import { appEvent } from "../services/events/app-event-handler";
-import { shelfFilter } from "./../utils/shelf/shelf-filter";
+import { shelfFilter } from "../utils/shelf/shelf-filter";
 
 import Header from "./header/Header";
 
@@ -30,18 +30,34 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this.fetchUserBooks();
     this.listenToBookShelfStatus();
+    this.listenToSearchCompleted();
+  }
 
+  fetchUserBooks() {
     booksAPIService
       .getAll()
       .then(books => this.setState({ books, isShelfsLoading: false }))
-      .catch(e => {
-        console.log(e);
-        this.setState({
-          networkError: true
-        });
-      });
+      .catch(this.handleNetworkError);
   }
+
+  fetchNewAddedUserBook(newAddedBookId) {
+    return booksAPIService.get(newAddedBookId).catch(this.handleNetworkError);
+  }
+
+  handleNetworkError = error => {
+    console.log(error);
+    this.setState({
+      networkError: true
+    });
+  };
+
+  listenToSearchCompleted = () => {
+    appEvent.whenSearchHasCompleted(() => {
+      appEvent.booksWereRearrenged(this.state.books);
+    });
+  };
 
   listenToBookShelfStatus() {
     appEvent.whenBookStatusChange(shelfStatuses => {
@@ -51,19 +67,32 @@ class App extends Component {
         currentBooks
       );
 
-      const newBookId = shelfFilter.getNewBooks(shelfStatuses, currentBooks);
+      const newAddedBookId = shelfFilter.getNewBooks(
+        shelfStatuses,
+        currentBooks
+      );
+      const hasNewAddedBook = !!newAddedBookId;
 
-      if (newBookId) {
-        const fetchBooks = booksAPIService.get(newBookId);
-        fetchBooks.then(newFetchedBook => {
-          this.setState(() => ({
-            books: [...rearregedBooks, newFetchedBook]
-          }));
+      if (hasNewAddedBook) {
+        this.fetchNewAddedUserBook(newAddedBookId).then(newFetchedBook => {
+          this.setState(
+            () => ({
+              books: [...rearregedBooks, newFetchedBook]
+            }),
+            () => {
+              appEvent.booksWereRearrenged(this.state.books);
+            }
+          );
         });
       } else {
-        this.setState(() => ({
-          books: rearregedBooks
-        }));
+        this.setState(
+          () => ({
+            books: rearregedBooks
+          }),
+          () => {
+            appEvent.booksWereRearrenged(this.state.books);
+          }
+        );
       }
     });
   }
@@ -105,11 +134,7 @@ class App extends Component {
                 <WantToReadPage books={books} isLoading={isShelfsLoading} />
               )}
             />
-            <Route
-              path="/search"
-              exact
-              render={() => <SearchPage books={books} />}
-            />
+            <Route path="/search" exact component={SearchPage} />
             <Route path="/offline" exact component={OfflinePage} />
             <Route path="/404" exact component={NotFoundPage} />
             <Route render={() => <Redirect to="/404" />} />

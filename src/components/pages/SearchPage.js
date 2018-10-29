@@ -1,78 +1,86 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import Shelf from "./../shelf/Shelf";
 import HeroSection from "./../HeroSection/HeroSection";
 import SearchBookForm from "./../SearchBookForm/SearchBookForm";
 
-import BookEntity from "../book/entity/BookEntity";
+import { appEvent } from "../../services/events/app-event-handler";
 import * as booksAPIService from "../../services/api/books-api";
 
 class SearchPage extends Component {
-  static propsTypes = {
-    books: PropTypes.arrayOf(BookEntity).isRequired
-  };
-
   state = {
     searchedBooks: [],
     isLoading: false
   };
 
-  searchBook = bookQuery => {
+  setupEvent = (() =>
+    appEvent.whenBooksWereRearrenged(books => {
+      this.whenSearchDidHappened(books);
+    }))();
+
+  searchBookHandler = bookQuery => {
     this.setState({ isLoading: true });
 
     if (!bookQuery.trim()) {
-      this.setState({ searchedBooks: [], isLoading: false });
+      this.emptyBookState();
       return;
     }
 
     booksAPIService
       .search(bookQuery)
-      .then(books => {
-        if (books.error) {
-          return this.setState({ searchedBooks: [], isLoading: false });
+      .then(response => {
+        if (response.error) {
+          return this.emptyBookState();
         }
 
-        this.setState({ searchedBooks: books }, this.searchDidHappened);
+        this.setState({ searchedBooks: response }, appEvent.searchHasCompleted);
       })
       .catch(error => {
-        this.setState({ searchedBooks: [], isLoading: false });
+        console.log(error);
+        this.emptyBookState();
       });
   };
 
-  searchDidHappened() {
-    this.props.books.forEach(storedBooks => {
-      this.setState(({ searchedBooks }) => {
-        return {
-          searchedBooks: searchedBooks.map(book => {
-            if (book.id === storedBooks.id) {
-              return storedBooks;
-            }
-            return book;
-          }),
-          isLoading: false
-        };
-      });
+  emptyBookState = () => {
+    this.setState({ searchedBooks: [], isLoading: false });
+  };
+
+  replaceSameBooksForCurrentStored = storedBook => {
+    this.setState(currentState => {
+      const { searchedBooks } = currentState;
+
+      return {
+        isLoading: false,
+        searchedBooks: searchedBooks.map(searchedBook => {
+          if (searchedBook.id === storedBook.id) {
+            return storedBook;
+          }
+          return searchedBook;
+        })
+      };
     });
-  }
+  };
 
-  isShelfHidden() {
+  whenSearchDidHappened = books => {
+    books.forEach(this.replaceSameBooksForCurrentStored);
+  };
+
+  isShelfHidden = () => {
     return !this.state.isLoading && this.state.searchedBooks.length === 0;
-  }
-
-  componentWillReceiveProps() {
-    this.searchDidHappened();
-  }
+  };
 
   render() {
+    const { searchedBooks, isLoading } = this.state;
+    const isShelfHidden = this.isShelfHidden();
+
     return (
       <div>
         <HeroSection
           title="Search"
-          subtitle="Find all books you like the most"
+          subtitle="Find all the books you like the most"
           sizeClass="is-small"
         >
-          <SearchBookForm onChangeHandler={this.searchBook} />
+          <SearchBookForm onChangeHandler={this.searchBookHandler} />
         </HeroSection>
 
         <div className="container">
@@ -80,10 +88,10 @@ class SearchPage extends Component {
             <div className="columns">
               <div className="column">
                 <Shelf
-                  books={this.state.searchedBooks}
+                  books={searchedBooks}
                   slotsByRow={2}
-                  isLoading={this.state.isLoading}
-                  isHidden={this.isShelfHidden()}
+                  isLoading={isLoading}
+                  isHidden={isShelfHidden}
                 />
               </div>
             </div>

@@ -11,7 +11,7 @@ class BookCard extends Component {
   render() {
     const {
       id,
-      shelf,
+      shelf = "none",
       title = "",
       subtitle = "",
       description = "",

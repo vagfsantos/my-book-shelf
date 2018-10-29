@@ -24,25 +24,41 @@ class Shelf extends Component {
     return this.props.books.length > 0;
   }
 
+  markup = {
+    getTitle: () => {
+      const { title } = this.props;
+
+      if (title) {
+        return <h2 className="title is-2 has-text-link">{title}</h2>;
+      }
+    },
+
+    getCards: () => {
+      return this.props.books.map(bookInfo => (
+        <div className={this.getColumnClassName()} key={bookInfo.id}>
+          <BookCard bookInfo={bookInfo} />
+        </div>
+      ));
+    },
+
+    getContent: () => {
+      if (this.hasBooks()) {
+        return this.markup.getCards();
+      } else if (this.props.isLoading) {
+        return <LoadingShelf />;
+      } else {
+        return <EmptyShelf />;
+      }
+    }
+  };
+
   render() {
     return this.props.isHidden ? null : (
       <div>
-        {this.props.title && (
-          <h2 className="title is-2 has-text-link">{this.props.title}</h2>
-        )}
+        {this.markup.getTitle()}
 
         <div className="columns is-multiline is-mobile">
-          {this.hasBooks() ? (
-            this.props.books.map(bookInfo => (
-              <div className={this.getColumnClassName()} key={bookInfo.id}>
-                <BookCard bookInfo={bookInfo} />
-              </div>
-            ))
-          ) : this.props.isLoading ? (
-            <LoadingShelf />
-          ) : (
-            <EmptyShelf />
-          )}
+          {this.markup.getContent()}
         </div>
       </div>
     );

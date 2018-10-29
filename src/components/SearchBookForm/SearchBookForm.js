@@ -7,19 +7,26 @@ class SearchBookForm extends Component {
   };
 
   state = {
-    searchValue: ""
+    userSearchText: ""
   };
 
-  onSubmitSearch = () => {
-    const searchText = this.state.searchValue;
-    const { onChangeHandler = () => {} } = this.props;
+  onSubmitSearch = event => {
+    event && event.preventDefault();
+
+    const {
+      onChangeHandler = () =>
+        console.warn(
+          "No change handler was given to <SeachBookForm /> component."
+        )
+    } = this.props;
+    const searchText = this.state.userSearchText;
     onChangeHandler(searchText);
   };
 
   onChangeInput = ({ target: { value } }) => {
     this.setState(
       {
-        searchValue: value
+        userSearchText: value
       },
       this.onSubmitSearch
     );
