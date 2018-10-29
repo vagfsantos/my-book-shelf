@@ -25,6 +25,7 @@ import "../styles/main.scss";
 class App extends Component {
   state = {
     books: [],
+    isShelfsLoading: true,
     networkError: false
   };
 
@@ -33,7 +34,7 @@ class App extends Component {
 
     booksAPIService
       .getAll()
-      .then(books => this.setState({ books }))
+      .then(books => this.setState({ books, isShelfsLoading: false }))
       .catch(e => {
         console.log(e);
         this.setState({
@@ -68,7 +69,7 @@ class App extends Component {
   }
 
   render() {
-    const { books, networkError } = this.state;
+    const { books, networkError, isShelfsLoading } = this.state;
 
     return (
       <Router>
@@ -76,21 +77,33 @@ class App extends Component {
           {networkError && <Redirect to="/offline" />}
           <Header />
           <Switch>
-            <Route path="/" exact render={() => <HomePage books={books} />} />
+            <Route
+              path="/"
+              exact
+              render={() => (
+                <HomePage books={books} isLoading={isShelfsLoading} />
+              )}
+            />
             <Route
               path="/reading"
               exact
-              render={() => <ReadingPage books={books} />}
+              render={() => (
+                <ReadingPage books={books} isLoading={isShelfsLoading} />
+              )}
             />
             <Route
               path="/read"
               exact
-              render={() => <ReadPage books={books} />}
+              render={() => (
+                <ReadPage books={books} isLoading={isShelfsLoading} />
+              )}
             />
             <Route
               path="/want-to-read"
               exact
-              render={() => <WantToReadPage books={books} />}
+              render={() => (
+                <WantToReadPage books={books} isLoading={isShelfsLoading} />
+              )}
             />
             <Route
               path="/search"

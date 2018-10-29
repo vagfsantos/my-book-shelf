@@ -14,12 +14,15 @@ class SearchPage extends Component {
   };
 
   state = {
-    searchedBooks: []
+    searchedBooks: [],
+    isLoading: false
   };
 
   searchBook = bookQuery => {
+    this.setState({ isLoading: true });
+
     if (!bookQuery.trim()) {
-      this.setState({ searchedBooks: [] });
+      this.setState({ searchedBooks: [], isLoading: false });
       return;
     }
 
@@ -27,13 +30,13 @@ class SearchPage extends Component {
       .search(bookQuery)
       .then(books => {
         if (books.error) {
-          return this.setState({ searchedBooks: [] });
+          return this.setState({ searchedBooks: [], isLoading: false });
         }
 
         this.setState({ searchedBooks: books }, this.searchDidHappened);
       })
       .catch(error => {
-        this.setState({ searchedBooks: [] });
+        this.setState({ searchedBooks: [], isLoading: false });
       });
   };
 
@@ -46,10 +49,15 @@ class SearchPage extends Component {
               return storedBooks;
             }
             return book;
-          })
+          }),
+          isLoading: false
         };
       });
     });
+  }
+
+  isShelfHidden() {
+    return !this.state.isLoading && this.state.searchedBooks.length === 0;
   }
 
   componentWillReceiveProps() {
@@ -71,7 +79,12 @@ class SearchPage extends Component {
           <section className="section">
             <div className="columns">
               <div className="column">
-                <Shelf books={this.state.searchedBooks} slotsByRow={2} />
+                <Shelf
+                  books={this.state.searchedBooks}
+                  slotsByRow={2}
+                  isLoading={this.state.isLoading}
+                  isHidden={this.isShelfHidden()}
+                />
               </div>
             </div>
           </section>

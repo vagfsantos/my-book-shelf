@@ -22,6 +22,7 @@ const ReadingPage = props => (
               title="Currently Reading"
               books={shelfFilter.getCurrentlyReading(props.books)}
               slotsByRow={1}
+              isLoading={props.isLoading}
             />
           </div>
         </div>

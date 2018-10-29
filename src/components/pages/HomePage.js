@@ -22,6 +22,7 @@ const HomePage = props => (
               title="Currently Reading"
               books={shelfFilter.getCurrentlyReading(props.books)}
               slotsByRow={1}
+              isLoading={props.isLoading}
             />
           </div>
         </div>
@@ -34,6 +35,7 @@ const HomePage = props => (
               title="Want to Read"
               books={shelfFilter.getWantToRead(props.books)}
               slotsByRow={1}
+              isLoading={props.isLoading}
             />
           </div>
           <div className="column">
@@ -41,6 +43,7 @@ const HomePage = props => (
               title="Already Read"
               books={shelfFilter.getAlreadyRead(props.books)}
               slotsByRow={1}
+              isLoading={props.isLoading}
             />
           </div>
         </div>

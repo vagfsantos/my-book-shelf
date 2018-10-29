@@ -22,6 +22,7 @@ const ReadPage = props => (
               title="Already Read"
               books={shelfFilter.getAlreadyRead(props.books)}
               slotsByRow={1}
+              isLoading={props.isLoading}
             />
           </div>
         </div>
