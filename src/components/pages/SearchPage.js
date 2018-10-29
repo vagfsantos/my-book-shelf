@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 import Shelf from "./../shelf/Shelf";
 import HeroSection from "./../HeroSection/HeroSection";
@@ -7,7 +7,7 @@ import SearchBookForm from "./../SearchBookForm/SearchBookForm";
 import { appEvent } from "../../services/events/app-event-handler";
 import * as booksAPIService from "../../services/api/books-api";
 
-class SearchPage extends Component {
+class SearchPage extends PureComponent {
   state = {
     searchedBooks: [],
     isLoading: false
@@ -46,23 +46,36 @@ class SearchPage extends Component {
   };
 
   replaceSameBooksForCurrentStored = storedBook => {
-    this.setState(currentState => {
-      const { searchedBooks } = currentState;
-
-      return {
-        isLoading: false,
-        searchedBooks: searchedBooks.map(searchedBook => {
-          if (searchedBook.id === storedBook.id) {
-            return storedBook;
-          }
-          return searchedBook;
-        })
-      };
+    const { searchedBooks } = this.state;
+    return searchedBooks.map(searchedBook => {
+      if (searchedBook.id === storedBook.id) {
+        return storedBook;
+      }
+      return searchedBook;
     });
   };
 
   whenSearchDidHappened = books => {
-    books.forEach(this.replaceSameBooksForCurrentStored);
+    const stored = this.state.searchedBooks.filter(book =>
+      books.find(b => b.id === book.id)
+    );
+    const replace = stored.map(
+      b =>
+        books.find(found => found.id === b.id)
+          ? books.find(found => found.id === b.id)
+          : b
+    );
+
+    this.setState(previous => {
+      return {
+        searchedBooks: previous.searchedBooks.map(
+          b =>
+            replace.find(found => b.id === found.id)
+              ? replace.find(found => b.id === found.id)
+              : b
+        )
+      };
+    });
   };
 
   isShelfHidden = () => {
