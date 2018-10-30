@@ -1,7 +1,7 @@
 # My Book Shelf
 My book shelf is a project developed in a course. It's not realistic but it shows a little bit of myself handling React.
 
-## the result
+## The result
 https://vagfsantos-mybookshelf.herokuapp.com/
 
 ***Note**: Routes isn't working well on heroku.*
