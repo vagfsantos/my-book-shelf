@@ -57,7 +57,7 @@ class Shelf extends Component {
       <div>
         {this.markup.getTitle()}
 
-        <div className="columns is-multiline is-mobile">
+        <div className="columns is-multiline is-desktop">
           {this.markup.getContent()}
         </div>
       </div>
