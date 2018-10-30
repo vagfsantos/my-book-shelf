@@ -1,6 +1,11 @@
 # My Book Shelf
 My book shelf is a project developed in a course. It's not realistic but it shows a little bit of myself handling React.
 
+## the result
+https://vagfsantos-mybookshelf.herokuapp.com/
+
+***Note**: Routes isn't working well on heroku.*
+
 ## Install
 Into order to install the project follow the steps. Make sure to have Node installed on your machine.
 
