@@ -16,8 +16,9 @@ class BookCard extends Component {
       subtitle = "",
       description = "",
       categories = [],
-      imageLinks: { thumbnail = "" }
+      imageLinks = { thumbnail: "" }
     } = this.props.bookInfo;
+    const { thumbnail } = imageLinks;
 
     return (
       <div className="book-card box has-background-light">
