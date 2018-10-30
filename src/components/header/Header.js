@@ -26,7 +26,7 @@ class Header extends Component {
     return (
       <header>
         <nav
-          className="navbar is-fixed-top is-link"
+          className="navbar is-fixed-top is-info"
           role="navigation"
           aria-label="main navigation"
         >

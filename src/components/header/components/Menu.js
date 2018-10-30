@@ -17,6 +17,19 @@ const Menu = props => (
         </NavLink>
       ))}
     </div>
+    <div className="navbar-end">
+      <NavLink
+        onClick={props.clickHandler}
+        to="/search"
+        className="navbar-item"
+        activeClassName="is-active"
+      >
+        <span className="icon">
+          <i className="fa fa-search" />
+        </span>
+        <span>Search a new book</span>
+      </NavLink>
+    </div>
   </div>
 );
 
