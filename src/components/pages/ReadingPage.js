@@ -1,38 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import SingleShelfPage from "./components/single-shelf-page";
 import BookEntity from "../book/entity/BookEntity";
-import Shelf from "../shelf/Shelf";
-import HeroSection from "../HeroSection/HeroSection";
 import { shelfFilter } from "../../utils/shelf/shelf-filter";
 
 const ReadingPage = props => (
-  <div>
-    <HeroSection
-      title="Reading"
-      subtitle="Stick to your reading and grow even more"
-      sizeClass="is-medium"
-    />
-
-    <div className="container">
-      <section className="section">
-        <div className="columns">
-          <div className="column">
-            <Shelf
-              title="Currently Reading"
-              books={shelfFilter.getCurrentlyReading(props.books)}
-              slotsByRow={1}
-              isLoading={props.isLoading}
-            />
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
+  <SingleShelfPage
+    title="Currently Reading"
+    subtitle="Stick to your reading and grow even more"
+    books={shelfFilter.getCurrentlyReading(props.books)}
+    isLoading={props.isLoading}
+  />
 );
 
 ReadingPage.propTypes = {
-  books: PropTypes.arrayOf(BookEntity)
+  books: PropTypes.arrayOf(BookEntity),
+  isLoading: PropTypes.bool.isRequired
 };
 
 export default ReadingPage;
