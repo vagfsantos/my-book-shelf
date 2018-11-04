@@ -45,9 +45,9 @@ export const shelfFilter = {
       ...(shelfStatuses[READ] || [])
     ];
 
-    const foundBooknNewBook = allBookIds.find(
+    const foundNewBook = allBookIds.find(
       id => !books.find(book => book.id === id)
     );
-    return foundBooknNewBook;
+    return foundNewBook;
   }
 };
