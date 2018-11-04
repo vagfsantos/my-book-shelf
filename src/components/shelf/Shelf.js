@@ -13,7 +13,8 @@ class Shelf extends Component {
     books: PropTypes.arrayOf(BookEntity).isRequired,
     slotsByRow: PropTypes.number.isRequired,
     isLoading: PropTypes.bool,
-    isHidden: PropTypes.bool
+    isHidden: PropTypes.bool,
+    onBookStatusChange: PropTypes.func.isRequired
   };
 
   getColumnClassName() {
@@ -36,7 +37,10 @@ class Shelf extends Component {
     getCards: () => {
       return this.props.books.map(bookInfo => (
         <div className={this.getColumnClassName()} key={bookInfo.id}>
-          <BookCard bookInfo={bookInfo} />
+          <BookCard
+            bookInfo={bookInfo}
+            onBookStatusChange={this.props.onBookStatusChange}
+          />
         </div>
       ));
     },

@@ -22,6 +22,7 @@ const SingleShelfPage = props => (
               books={props.books}
               slotsByRow={1}
               isLoading={props.isLoading}
+              onBookStatusChange={props.onBookStatusChange}
             />
           </div>
         </div>
@@ -34,7 +35,8 @@ SingleShelfPage.propTypes = {
   books: PropTypes.arrayOf(BookEntity),
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool.isRequired
+  isLoading: PropTypes.bool.isRequired,
+  onBookStatusChange: PropTypes.func.isRequired
 };
 
 export default SingleShelfPage;

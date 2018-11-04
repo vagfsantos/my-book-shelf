@@ -23,6 +23,7 @@ const HomePage = props => (
               books={shelfFilter.getCurrentlyReading(props.books)}
               slotsByRow={1}
               isLoading={props.isLoading}
+              onBookStatusChange={props.onBookStatusChange}
             />
           </div>
         </div>
@@ -36,6 +37,7 @@ const HomePage = props => (
               books={shelfFilter.getWantToRead(props.books)}
               slotsByRow={1}
               isLoading={props.isLoading}
+              onBookStatusChange={props.onBookStatusChange}
             />
           </div>
           <div className="column">
@@ -44,6 +46,7 @@ const HomePage = props => (
               books={shelfFilter.getAlreadyRead(props.books)}
               slotsByRow={1}
               isLoading={props.isLoading}
+              onBookStatusChange={props.onBookStatusChange}
             />
           </div>
         </div>
@@ -53,7 +56,9 @@ const HomePage = props => (
 );
 
 HomePage.propTypes = {
-  books: PropTypes.arrayOf(BookEntity)
+  books: PropTypes.arrayOf(BookEntity),
+  isLoading: PropTypes.bool.isRequired,
+  onBookStatusChange: PropTypes.func.isRequired
 };
 
 export default HomePage;

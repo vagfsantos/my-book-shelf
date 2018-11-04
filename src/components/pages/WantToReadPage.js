@@ -12,12 +12,14 @@ const WantToReadPage = props => (
     subtitle="Start to read what you love"
     books={shelfFilter.getWantToRead(props.books)}
     isLoading={props.isLoading}
+    onBookStatusChange={props.onBookStatusChange}
   />
 );
 
 WantToReadPage.propTypes = {
   books: PropTypes.arrayOf(BookEntity),
-  isLoading: PropTypes.bool.isRequired
+  isLoading: PropTypes.bool.isRequired,
+  onBookStatusChange: PropTypes.func.isRequired
 };
 
 export default WantToReadPage;

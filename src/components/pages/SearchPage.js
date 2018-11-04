@@ -1,23 +1,30 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { debounce } from "throttle-debounce";
 
+import BookEntity from "../book/entity/BookEntity";
 import Shelf from "./../shelf/Shelf";
 import HeroSection from "./../HeroSection/HeroSection";
 import SearchBookForm from "./../SearchBookForm/SearchBookForm";
 
-import { appEvent } from "../../services/events/app-event-handler";
 import * as booksAPIService from "../../services/api/books-api";
 
 class SearchPage extends Component {
+  static propTypes = {
+    books: PropTypes.arrayOf(BookEntity.isRequired).isRequired,
+    onBookStatusChange: PropTypes.func.isRequired
+  };
+
   state = {
     searchedBooks: [],
     isLoading: false
   };
 
-  setupEvent = (() =>
-    appEvent.whenBooksWereRearrenged(books => {
-      this.whenSearchDidHappened(books);
-    }))();
+  componentDidUpdate(previousProps) {
+    if (previousProps.books !== this.props.books) {
+      this.updateShelfStatuses(this.props.books);
+    }
+  }
 
   lastAPICall = null;
 
@@ -39,7 +46,9 @@ class SearchPage extends Component {
           return this.emptyBookState();
         }
 
-        this.setState({ searchedBooks: response }, appEvent.searchHasCompleted);
+        this.setState({ searchedBooks: response }, () => {
+          this.updateShelfStatuses(this.props.books);
+        });
       })
       .catch(error => {
         console.log(error);
@@ -61,7 +70,7 @@ class SearchPage extends Component {
     });
   };
 
-  whenSearchDidHappened = currentStoredBooks => {
+  updateShelfStatuses = currentStoredBooks => {
     const searchedBooksInAnyShelf = this.state.searchedBooks.filter(
       searchedBook =>
         currentStoredBooks.find(storedBook => storedBook.id === searchedBook.id)
@@ -122,6 +131,7 @@ class SearchPage extends Component {
                   slotsByRow={2}
                   isLoading={isLoading}
                   isHidden={isShelfHidden}
+                  onBookStatusChange={this.props.onBookStatusChange}
                 />
               </div>
             </div>

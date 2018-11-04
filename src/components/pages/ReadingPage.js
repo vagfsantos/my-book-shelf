@@ -11,12 +11,14 @@ const ReadingPage = props => (
     subtitle="Stick to your reading and grow even more"
     books={shelfFilter.getCurrentlyReading(props.books)}
     isLoading={props.isLoading}
+    onBookStatusChange={props.onBookStatusChange}
   />
 );
 
 ReadingPage.propTypes = {
   books: PropTypes.arrayOf(BookEntity),
-  isLoading: PropTypes.bool.isRequired
+  isLoading: PropTypes.bool.isRequired,
+  onBookStatusChange: PropTypes.func.isRequired
 };
 
 export default ReadingPage;

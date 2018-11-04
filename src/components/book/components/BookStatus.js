@@ -5,20 +5,20 @@ import ButtonStatusButton from "./BookStatusButton";
 
 import { BOOK_SHELF_STATUS } from "../../../enums/books-status";
 import * as booksAPIService from "../../../services/api/books-api";
-import { appEvent } from "../../../services/events/app-event-handler";
 
 const { READING, WANT_TO_READ, READ } = BOOK_SHELF_STATUS;
 
 class BookStatus extends Component {
   static propTypes = {
     bookID: PropTypes.string.isRequired,
-    activeShelf: PropTypes.string.isRequired
+    activeShelf: PropTypes.string.isRequired,
+    onBookStatusChange: PropTypes.func.isRequired
   };
 
   onChangeShelf(shelf) {
     booksAPIService
       .update({ id: this.props.bookID }, shelf)
-      .then(appEvent.bookStatusHasChanged)
+      .then(this.props.onBookStatusChange)
       .catch(console.log);
   }
 

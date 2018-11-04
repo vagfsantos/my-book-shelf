@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import BookEntity from "./entity/BookEntity";
 
@@ -8,6 +9,11 @@ import BookTags from "./components/BookTags";
 import BookStatus from "./components/BookStatus";
 
 class BookCard extends Component {
+  static propTypes = {
+    bookInfo: BookEntity.isRequired,
+    onBookStatusChange: PropTypes.func.isRequired
+  };
+
   render() {
     const {
       id,
@@ -19,6 +25,7 @@ class BookCard extends Component {
       imageLinks = { thumbnail: "" }
     } = this.props.bookInfo;
     const { thumbnail } = imageLinks;
+    const { onBookStatusChange } = this.props;
 
     return (
       <div className="book-card box has-background-light">
@@ -31,16 +38,16 @@ class BookCard extends Component {
               description={description}
             />
             <BookTags categories={categories} />
-            <BookStatus bookID={id} activeShelf={shelf} />
+            <BookStatus
+              bookID={id}
+              activeShelf={shelf}
+              onBookStatusChange={onBookStatusChange}
+            />
           </div>
         </div>
       </div>
     );
   }
 }
-
-BookCard.propTypes = {
-  bookInfo: BookEntity.isRequired
-};
 
 export default BookCard;

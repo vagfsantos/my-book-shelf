@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 
 import * as booksAPIService from "../services/api/books-api";
-import { appEvent } from "../services/events/app-event-handler";
 import { shelfFilter } from "../utils/shelf/shelf-filter";
 
 import Header from "./header/Header";
@@ -31,8 +30,6 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchUserBooks();
-    this.listenToBookShelfStatus();
-    this.listenToSearchCompleted();
   }
 
   fetchUserBooks() {
@@ -53,49 +50,28 @@ class App extends Component {
     });
   };
 
-  listenToSearchCompleted = () => {
-    appEvent.whenSearchHasCompleted(() => {
-      appEvent.booksWereRearrenged(this.state.books);
-    });
+  onBookStatusChange = shelfStatuses => {
+    const currentBooks = this.state.books;
+    const rearregedBooks = shelfFilter.rearrangeBooksByShelf(
+      shelfStatuses,
+      currentBooks
+    );
+
+    const newAddedBookId = shelfFilter.getNewBooks(shelfStatuses, currentBooks);
+    const hasNewAddedBook = !!newAddedBookId;
+
+    if (hasNewAddedBook) {
+      this.fetchNewAddedUserBook(newAddedBookId).then(newFetchedBook => {
+        this.setState(() => ({
+          books: [...rearregedBooks, newFetchedBook]
+        }));
+      });
+    } else {
+      this.setState(() => ({
+        books: rearregedBooks
+      }));
+    }
   };
-
-  listenToBookShelfStatus() {
-    appEvent.whenBookStatusChange(shelfStatuses => {
-      const currentBooks = this.state.books;
-      const rearregedBooks = shelfFilter.rearrangeBooksByShelf(
-        shelfStatuses,
-        currentBooks
-      );
-
-      const newAddedBookId = shelfFilter.getNewBooks(
-        shelfStatuses,
-        currentBooks
-      );
-      const hasNewAddedBook = !!newAddedBookId;
-
-      if (hasNewAddedBook) {
-        this.fetchNewAddedUserBook(newAddedBookId).then(newFetchedBook => {
-          this.setState(
-            () => ({
-              books: [...rearregedBooks, newFetchedBook]
-            }),
-            () => {
-              appEvent.booksWereRearrenged(this.state.books);
-            }
-          );
-        });
-      } else {
-        this.setState(
-          () => ({
-            books: rearregedBooks
-          }),
-          () => {
-            appEvent.booksWereRearrenged(this.state.books);
-          }
-        );
-      }
-    });
-  }
 
   render() {
     const { books, networkError, isShelfsLoading } = this.state;
@@ -110,31 +86,56 @@ class App extends Component {
               path="/"
               exact
               render={() => (
-                <HomePage books={books} isLoading={isShelfsLoading} />
+                <HomePage
+                  books={books}
+                  onBookStatusChange={this.onBookStatusChange}
+                  isLoading={isShelfsLoading}
+                />
               )}
             />
             <Route
               path="/reading"
               exact
               render={() => (
-                <ReadingPage books={books} isLoading={isShelfsLoading} />
+                <ReadingPage
+                  books={books}
+                  onBookStatusChange={this.onBookStatusChange}
+                  isLoading={isShelfsLoading}
+                />
               )}
             />
             <Route
               path="/read"
               exact
               render={() => (
-                <ReadPage books={books} isLoading={isShelfsLoading} />
+                <ReadPage
+                  books={books}
+                  onBookStatusChange={this.onBookStatusChange}
+                  isLoading={isShelfsLoading}
+                />
               )}
             />
             <Route
               path="/want-to-read"
               exact
               render={() => (
-                <WantToReadPage books={books} isLoading={isShelfsLoading} />
+                <WantToReadPage
+                  books={books}
+                  onBookStatusChange={this.onBookStatusChange}
+                  isLoading={isShelfsLoading}
+                />
               )}
             />
-            <Route path="/search" exact component={SearchPage} />
+            <Route
+              path="/search"
+              exact
+              render={() => (
+                <SearchPage
+                  books={books}
+                  onBookStatusChange={this.onBookStatusChange}
+                />
+              )}
+            />
             <Route path="/offline" exact component={OfflinePage} />
             <Route path="/404" exact component={NotFoundPage} />
             <Route render={() => <Redirect to="/404" />} />

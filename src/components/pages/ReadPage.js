@@ -11,12 +11,14 @@ const ReadPage = props => (
     subtitle="Look how much you've done so far"
     books={shelfFilter.getAlreadyRead(props.books)}
     isLoading={props.isLoading}
+    onBookStatusChange={props.onBookStatusChange}
   />
 );
 
 ReadPage.propTypes = {
   books: PropTypes.arrayOf(BookEntity),
-  isLoading: PropTypes.bool.isRequired
+  isLoading: PropTypes.bool.isRequired,
+  onBookStatusChange: PropTypes.func.isRequired
 };
 
 export default ReadPage;
