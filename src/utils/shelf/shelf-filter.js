@@ -4,15 +4,15 @@ const { READING, READ, WANT_TO_READ } = BOOK_SHELF_STATUS;
 
 export const shelfFilter = {
   getCurrentlyReading(books = []) {
-    return books.filter(book => book.shelf === "currentlyReading");
+    return books.filter(book => book.shelf === READING);
   },
 
   getWantToRead(books = []) {
-    return books.filter(book => book.shelf === "wantToRead");
+    return books.filter(book => book.shelf === WANT_TO_READ);
   },
 
   getAlreadyRead(books = []) {
-    return books.filter(book => book.shelf === "read");
+    return books.filter(book => book.shelf === READ);
   },
 
   rearrangeBooksByShelf(shelfStatuses, currentBooks) {

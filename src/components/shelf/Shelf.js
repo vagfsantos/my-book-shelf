@@ -18,7 +18,7 @@ class Shelf extends Component {
   };
 
   getColumnClassName() {
-    return `column is-${12 / this.props.slotsByRow}`;
+    return `column is-${12 / (this.props.slotsByRow || 1)}`;
   }
 
   hasBooks() {
