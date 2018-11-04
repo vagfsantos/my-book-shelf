@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { debounce } from "throttle-debounce";
 
 import Shelf from "./../shelf/Shelf";
 import HeroSection from "./../HeroSection/HeroSection";
@@ -20,7 +21,7 @@ class SearchPage extends Component {
 
   lastAPICall = null;
 
-  searchBookHandler = bookQuery => {
+  searchBookHandler = debounce(250, bookQuery => {
     this.setState({ isLoading: true });
 
     if (!bookQuery.trim()) {
@@ -28,7 +29,7 @@ class SearchPage extends Component {
     }
 
     return this.fetchBookResults(bookQuery);
-  };
+  });
 
   fetchBookResults = bookQuery => {
     this.lastAPICall = booksAPIService
